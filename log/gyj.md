@@ -216,4 +216,6 @@ rosdepc install -i --from-path src --rosdistro humble -y
 sudo apt install python3-colcon-ros
 colcon build
 #总共是四个文件夹，src 放源码，build 放编译目标文件，install 方链接可执行文件
+#添加到环境
+source ~/workspace/dev_ws/intstall/local_setup.sh
 ```
