@@ -218,10 +218,120 @@ sudo apt install python3-colcon-ros
 colcon build
 #总共是四个文件夹，src 放源码，build 放编译目标文件，install 方链接可执行文件
 #添加到环境
-source ~/workspace/dev_ws/intstall/local_setup.sh
+source ~/workspace/dev_ws/intstall/local_setup.bash
 ```
 ## 2. 功能包
+1. 创建功能包
 ```bash
 #创建功能包
+cd ~/workspace/dev_ws/src
 ros2 pkg create --build-type <build-type> <package-name>
+#编译
+cd ~/workspace/dev
+colcon build
 ```
+```bash
+imain@xxl:~/workspace/ros2_learning$/dev_ws/src ros2 pkg create --build-type ament_cmake create-pkg-c
+going to create a new package
+package name: create-pkg-c
+destination directory: /home/imain/workspace/ros2_learning
+package format: 3
+version: 0.0.0
+description: TODO: Package description
+maintainer: ['imain <2133275265@qq.com>']
+licenses: ['TODO: License declaration']
+build type: ament_cmake
+dependencies: []
+creating folder ./create-pkg-c
+creating ./create-pkg-c/package.xml
+creating source and include folder
+creating folder ./create-pkg-c/src
+creating folder ./create-pkg-c/include/create-pkg-c
+creating ./create-pkg-c/CMakeLists.txt
+
+[WARNING]: Unknown license 'TODO: License declaration'.  This has been set in the package.xml, but no LICENSE file has been created.
+It is recommended to use one of the ament license identitifers:
+Apache-2.0
+BSL-1.0
+BSD-2.0
+BSD-2-Clause
+BSD-3-Clause
+GPL-3.0-only
+LGPL-3.0-only
+MIT
+MIT-0
+imain@xxl:~/workspace/ros2_learning/dev_ws$ colcon build
+Starting >>> learning_interface
+Starting >>> create-pkg-c
+Starting >>> learning_cv
+Starting >>> learning_gazebo
+Starting >>> learning_gazebo_harmonic
+Starting >>> learning_launch
+Starting >>> learning_node
+Starting >>> learning_node_cpp
+Starting >>> learning_parameter
+Starting >>> learning_parameter_cpp
+Starting >>> learning_pkg_c
+Starting >>> learning_pkg_python
+Starting >>> learning_qos
+Starting >>> learning_tf
+Starting >>> learning_tf_cpp
+Starting >>> learning_topic_cpp
+Starting >>> learning_urdf
+Finished <<< learning_pkg_c [1.58s]                                      
+Finished <<< create-pkg-c [1.61s]                                           
+Finished <<< learning_pkg_python [1.96s]                                    
+Finished <<< learning_parameter [2.01s]                                     
+Finished <<< learning_node [2.02s]
+Finished <<< learning_gazebo [2.03s]
+Finished <<< learning_cv [2.04s]
+Finished <<< learning_tf [2.06s]
+Finished <<< learning_urdf [2.09s]                                          
+Finished <<< learning_qos [2.10s]
+Finished <<< learning_gazebo_harmonic [2.15s]
+Finished <<< learning_launch [2.18s]
+Finished <<< learning_parameter_cpp [4.10s]                                  
+Finished <<< learning_node_cpp [4.21s]                                       
+Finished <<< learning_interface [4.51s]                                       
+Starting >>> learning_action
+Starting >>> learning_action_cpp
+Starting >>> learning_service
+Starting >>> learning_service_cpp
+Starting >>> learning_topic
+Finished <<< learning_topic [0.87s]                                       
+Finished <<< learning_action [0.96s]                                      
+Finished <<< learning_service [1.07s]                                     
+Finished <<< learning_topic_cpp [7.95s]                                    
+Finished <<< learning_service_cpp [3.60s]                                  
+Finished <<< learning_tf_cpp [8.13s]                                       
+Finished <<< learning_action_cpp [3.75s]                       
+
+Summary: 22 packages finished [8.44s]
+imain@xxl:~/workspace/ros2_learning/dev_ws$ source install/local_setup.bash
+```
+` 若改变包的路径需要删除installl build和log重新colcon
+2. 功能包结构
+```bash
+imain@xxl:~/workspace/ros2_learning/dev_ws/src/create-pkg-c$ tree
+.
+├── CMakeLists.txt
+├── include
+│   └── create-pkg-c
+├── package.xml
+└── src
+
+3 directories, 2 files
+```
+## 3.节点
+1. 通信模型
+在机器人身体里搭载了一台计算机A，它可以通过机器人的眼睛——摄像头，获取外界环境的信息，也可以控制机器人的腿——轮子，让机器人移动到想要去的地方。除此之外，可能还会有另外一台计算机B，放在你的桌子上，它可以远程监控机器人看到的信息，也可以远程配置机器人的速度和某些参数，还可以连接一个摇杆，人为控制机器人前后左右运动。
+
+这些功能虽然位于不同的计算机中，但都是这款机器人的工作细胞，也就是节点，他们共同组成了一个完整的机器人系统。
+
+  1. 节点在机器人系统中的职责就是**执行某些具体的任务**，从计算机操作系统的角度来看，也叫做进程；
+  2. 每个节点都是一个可以独立运行的**可执行文件**，比如执行某一个python程序，或者执行C++编译生成的结果，都算是运行了一个节点；
+  3. 既然每个节点都是独立的执行文件，那自然就可以想到，得到这个执行文件的**编程语言可以是不同的**，比如C++、Python，乃至Java、Ruby等更多语言。
+  4. 这些节点是功能各不相同的细胞，根据系统设计的不同，可能位于计算机A，也可能位于计算机B，还有可能运行在云端，这叫做**分布式**，也就是可以分布在不同的硬件载体上；
+  5. 每一个节点都需要有**唯一的命名**，当我们想要去找到某一个节点的时候，或者想要查询某一个节点的状态时，可以通过节点的名称来做查询。
+节点也可以比喻是一个一个的工人，分别完成不同的任务，他们有的在一线厂房工作，有的在后勤部门提供保障，他们互相可能并不认识，但却一起推动机器人这座“工厂”，完成更为复杂的任务。
+2. 案例
