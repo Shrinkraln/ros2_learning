@@ -212,10 +212,16 @@ mkdir -p ~/workspace/dev_ws/src
 cd ~/workspace/dev_ws/src
 git clone  https://gitee.com/guyuehome/ros2_21_tutorials.git
 cd ~/workspace/dev_ws
+#安装缺少的系统依赖
 rosdepc install -i --from-path src --rosdistro humble -y
 sudo apt install python3-colcon-ros
 colcon build
 #总共是四个文件夹，src 放源码，build 放编译目标文件，install 方链接可执行文件
 #添加到环境
 source ~/workspace/dev_ws/intstall/local_setup.sh
+```
+## 2. 功能包
+```bash
+#创建功能包
+ros2 pkg create --build-type <build-type> <package-name>
 ```
