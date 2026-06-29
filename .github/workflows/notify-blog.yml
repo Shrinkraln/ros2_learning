@@ -1,0 +1,27 @@
+name: 通知博客重新部署
+
+# 本仓库 push 后，通知 Shrinkraln/blog 仓库重新构建部署
+on:
+  push:
+    branches: [master, main]
+
+jobs:
+  notify-blog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 触发 Shrinkraln/blog 部署
+        env:
+          TOKEN: ${{ secrets.BLOG_DISPATCH_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "未配置 BLOG_DISPATCH_TOKEN secret，跳过通知。"
+            echo "请到本仓库 Settings → Secrets and variables → Actions 添加该 secret。"
+            exit 0
+          fi
+          curl -fsS -X POST \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/Shrinkraln/blog/dispatches \
+            -d '{"event_type":"content-update"}'
+          echo "已通知 blog 仓库重新部署。"
