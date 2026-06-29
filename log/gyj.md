@@ -1,8 +1,8 @@
 ---
-title:ROS2
-description:基于古月居博客笔记
-pubDate:2026-06-29
-tags:['ROS2 ']
+title: ROS2 学习笔记
+description: 基于古月居博客笔记
+pubDate: 2026-06-29
+tags: ['ROS2']
 ---
 # 1.系统架构
 ## 1. 命令行
